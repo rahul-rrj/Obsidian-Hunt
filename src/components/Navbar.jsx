@@ -85,7 +85,7 @@ export default function Navbar({ onSearchClick, activeSection, onNavigate }) {
         >
           <div className="text-2xl filter drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] group-hover:scale-110 transition-transform duration-300">🚀</div>
           <div>
-            <div className="text-sm font-black tracking-widest text-slate-100 font-display">LAUNCH HUNTER</div>
+            <div className="text-sm font-black tracking-widest text-slate-100 font-display">OBSIDIAN HUNT</div>
             <div className="text-[8px] text-neon-cyan/50 tracking-wider">MISSION COMMAND CENTER</div>
           </div>
         </button>

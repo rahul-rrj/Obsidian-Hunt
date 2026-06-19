@@ -1,4 +1,4 @@
-# 🚀 Launch Hunter
+# 🚀 Obsidian Hunt
 ### *"Never Miss Humanity's Next Leap"*
 
 [![Vite](https://img.shields.io/badge/Vite-B73BFF?style=for-the-badge&logo=vite&logoColor=FFD62B)](https://vite.dev/)
@@ -7,9 +7,9 @@
 [![ThreeJS](https://img.shields.io/badge/ThreeJS-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
-Welcome to **Launch Hunter**, a premium, highly interactive flight operations and telemetry console designed to look and feel like opening a mission control center at NASA or SpaceX Starbase. 
+Welcome to **Obsidian Hunt**, a premium, highly interactive flight operations and telemetry console designed to look and feel like opening a mission control center at NASA or SpaceX Starbase. 
 
-Unlike standard "list of cards" student templates, **Launch Hunter** is engineered as a real-time command dashboard complete with custom WebGL graphics, canvas charting loops, automated flight checklists, and a search console designed to capture recruiter attention immediately.
+Unlike standard "list of cards" student templates, **Obsidian Hunt** is engineered as a real-time command dashboard complete with custom WebGL graphics, canvas charting loops, automated flight checklists, and a search console designed to capture recruiter attention immediately.
 
 ---
 
@@ -85,8 +85,8 @@ Follow these commands to run the project locally:
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/your-username/launch-hunter.git
-    cd launch-hunter
+    git clone https://github.com/your-username/Obsidian-Hunt.git
+    cd Obsidian-Hunt
     ```
 2.  **Install dependencies**:
     ```bash

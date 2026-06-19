@@ -33,7 +33,7 @@ export default function Footer({ onNavigate }) {
           <div className="text-left flex items-center gap-2">
             <span className="text-xl">🚀</span>
             <div>
-              <div className="font-bold text-slate-300 font-display">LAUNCH HUNTER</div>
+              <div className="font-bold text-slate-300 font-display">OBSIDIAN HUNT</div>
               <span className="text-[10px] text-slate-600 block mt-0.5">Aerospace Command Console OS V4.8.1</span>
             </div>
           </div>
@@ -56,7 +56,7 @@ export default function Footer({ onNavigate }) {
 
           {/* Copyright details */}
           <div className="text-right">
-            <span>© {new Date().getFullYear()} Launch Hunter. Open-Source Flight Operations.</span>
+            <span>© {new Date().getFullYear()} Obsidian Hunt. Open-Source Flight Operations.</span>
             <span className="text-[9px] text-neon-cyan/40 mt-1 block">AUTHORIZED COMMAND CHANNEL ONLY</span>
           </div>
         </div>

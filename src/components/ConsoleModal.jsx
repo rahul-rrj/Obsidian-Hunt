@@ -336,7 +336,7 @@ export default function ConsoleModal({ launch, onClose }) {
           {/* HUD status footer bar */}
           <div className="bg-space-black/80 px-6 py-2.5 border-t border-white/10 flex items-center justify-between text-[9px] text-slate-500 shrink-0">
             <span>SYS_LINK: PRIMARY_ACTIVE</span>
-            <span className="text-neon-cyan/40">LAUNCH HUNTER OPERATIONS TERMINAL</span>
+            <span className="text-neon-cyan/40">OBSIDIAN HUNT OPERATIONS TERMINAL</span>
           </div>
         </motion.div>
       </div>

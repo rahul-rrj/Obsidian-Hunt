@@ -243,7 +243,7 @@ export default function SearchOverlay({ isOpen, onClose, onSelectLaunch }) {
           {/* Footer controls hint */}
           <div className="bg-space-black/80 px-4 py-2 border-t border-white/5 flex items-center justify-between text-[9px] text-slate-500">
             <span>PRESS <kbd className="bg-white/5 px-1 py-0.5 rounded text-slate-400">ESC</kbd> TO CLOSE</span>
-            <span className="text-neon-cyan/40">LAUNCH HUNTER TELEMETRY DATABASE</span>
+            <span className="text-neon-cyan/40">OBSIDIAN HUNT TELEMETRY DATABASE</span>
           </div>
         </motion.div>
       </div>

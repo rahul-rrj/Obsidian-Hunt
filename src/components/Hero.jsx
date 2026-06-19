@@ -121,7 +121,7 @@ export default function Hero({ onExploreClick, onWatchMission }) {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl md:text-6xl font-black font-display tracking-tight text-white mb-4 uppercase leading-none"
           >
-            LAUNCH <span className="text-neon-cyan font-bold drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]">HUNTER</span>
+            OBSIDIAN <span className="text-neon-cyan font-bold drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]">HUNT</span>
           </motion.h1>
 
           <motion.p

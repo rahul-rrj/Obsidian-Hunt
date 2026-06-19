@@ -9,7 +9,7 @@ const BOOT_LOGS = [
   { text: 'SECURING TERMINAL DATA STREAM (SSL/TLS)...', icon: Shield },
   { text: 'INTEGRATING SPACEX TELEMETRY FEED... RETRYING...', icon: Terminal },
   { text: 'API TIMEOUT (FALLING BACK TO SYSTEM BACKUP DATA)...', icon: Shield },
-  { text: 'LAUNCH HUNTER OS V4.8.1 ONLINE. GO FOR FLIGHT.', icon: Cpu },
+  { text: 'OBSIDIAN HUNT OS V4.8.1 ONLINE. GO FOR FLIGHT.', icon: Cpu },
 ];
 
 export default function Loader({ onComplete }) {
@@ -88,7 +88,7 @@ export default function Loader({ onComplete }) {
           >
             🚀
           </motion.div>
-          <h2 className="text-xl font-bold tracking-widest text-slate-100 font-display">LAUNCH HUNTER</h2>
+          <h2 className="text-xl font-bold tracking-widest text-slate-100 font-display">OBSIDIAN HUNT</h2>
           <div className="text-[10px] text-neon-cyan/60 mt-1 uppercase tracking-widest">MISSION CONTROL OPERATING SYSTEM</div>
         </div>
 
