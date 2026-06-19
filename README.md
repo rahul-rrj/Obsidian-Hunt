@@ -1,106 +1,138 @@
+<p align="center">
+  <img src="public/banner.png" alt="Obsidian Hunt Banner" width="100%" style="border-radius: 8px; border: 1px solid #13192b; box-shadow: 0 0 20px rgba(0, 240, 255, 0.15);" />
+</p>
+
 # 🛰️ OBSIDIAN HUNT // Mission Control Center
-### *A Premium, Immersive Aerospace Operations Dashboard & Telemetry Visualizer*
+<p align="center">
+  <strong>A Premium, High-Fidelity Aerospace Operations Dashboard & Telemetry Visualizer</strong>
+</p>
 
-🔗 **Live Console Feed**: [obsidian-hunt.netlify.app](https://obsidian-hunt.netlify.app/)
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
+  <img src="https://img.shields.io/badge/Vite-8-purple?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite 8" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=38B2AC" alt="Tailwind CSS v4" />
+  <img src="https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
+  <img src="https://img.shields.io/badge/Status-Operational-00f0ff?style=for-the-badge" alt="Status" />
+</p>
 
----
-
-## 📌 Mission Objective (Project Overview)
-
-**Obsidian Hunt** is a premium, high-fidelity web application styled after a modern aerospace command center (inspired by SpaceX Starbase and NASA Flight Operations). Breaking away from standard, static portfolio cards, this project delivers an interactive dashboard displaying mock and live spaceflight telemetry, flight path vectors, orbital coordinates, and launch timelines.
-
-The primary objective is to demonstrate proficiency in high-performance WebGL graphics, canvas rendering loops, modular React state coordination, and modern Tailwind v4 styling frameworks.
-
----
-
-## 🛠️ Technology Stack & Tools Used
-
-The application is built on a modern frontend architecture selected for rendering speed, modularity, and fluid visual animations:
-
-### 1. Core Framework & Bundler
-*   **React 19**: Leverages React's component-driven architecture to manage complex, overlapping UI states (e.g., launching modals, search overlays, active navigation sections) and handles virtual DOM updates efficiently.
-*   **Vite 8**: Serves as the build tool and development server, utilizing native ES modules for instantaneous Hot Module Replacement (HMR) and optimized Rollup-based production chunking.
-
-### 2. Styling & HUD Theme Engine
-*   **Tailwind CSS v4**: Integrated using the official `@tailwindcss/vite` compiler plugin. Themes are defined directly inside `src/index.css` using the `@theme` directive, which compiles variables into utility classes.
-*   **Custom CSS Effects**:
-    *   *CRT Scanlines*: A linear-gradient overlay loop mimicking retro military radar monitors.
-    *   *Cyber Grid Backdrops*: Vector grids providing spatial alignment.
-    *   *Starfield Parallax*: CSS-animated vertical scrolling star particles.
-    *   *Tabular Figures*: Monospaced font configuration (`font-mono` using JetBrains Mono) that keeps layout positions stable while telemetry coordinates and countdown timers update.
-
-### 3. Graphics & Animation Libraries
-*   **Three.js (WebGL)**: Powers the interactive 3D Globe. Implemented inside a vanilla React `useRef` to maintain lightweight DOM attachment and prevent version conflicts with React 19.
-*   **HTML Canvas API**: Used in the featured banner and flight controller modals to render real-time telemetry curves, grid axes, and rocket apogee trajectories without taxing the main DOM thread.
-*   **Framer Motion**: Manages smooth spring-physics micro-interactions (e.g., card tilts, button scale reactions, fade-in lists, and modal slide-ins).
-*   **Lucide React**: Provides sleek, vector-based aerospace iconography.
+<p align="center">
+  🔗 <strong>Live Mission Console Feed</strong>: <a href="https://obsidian-hunt.netlify.app/">obsidian-hunt.netlify.app</a>
+</p>
 
 ---
 
-## 🔌 Data Layer & APIs Used
+## 📌 Mission Objective
 
-To ensure robust uptime and prevent rate-limiting or CORS issues during portfolio reviews, the application utilizes a **hybrid API architecture**:
+**Obsidian Hunt** is an immersive, high-fidelity aerospace flight operations dashboard and interactive telemetry console. Inspired by modern SpaceX Starbase and NASA Mission Control rooms, it bridges the gap between raw data and creative front-end execution. 
 
-### 1. SpaceX API
-*   **Endpoints Queried**: `/v4/launches` and `/v4/rockets`.
-*   **Usage**: Provides data regarding launch sites (Vandenberg, Cape Canaveral), rocket specs (height, thrust, mass), payloads (Dragon, Starlink), and historical flight success rates.
+This platform showcases real-time telemetry coordinates, orbital flight paths, 3D WebGL visualizations, and dynamic canvas graphs — all coordinated through a reactive, state-driven dashboard system.
 
-### 2. Launch Library 2 API
-*   **Usage**: Used to fetch global spaceflight scheduling datasets, including international launch manifests (ISRO, ESA, Arianespace).
-
-### 3. Fail-Safe Hybrid Telemetry Controller
-*   **The Controller**: If external requests fail, time out, or hit CORS blockades, the app immediately redirects data flow to `src/data/mockLaunchData.js`.
-*   **Mock Content**: A comprehensive backup dataset detailing coordinates, checklist staging phases (Propellant Load, Guidance Lock, Max Q, Orbit Insertion), and telemetry coordinate curves. This ensures 100% uptime for recruiter demonstrations.
+> [!TIP]
+> **Recruiter & Reviewer Quick-Start**: The system features a built-in hybrid API fail-safe network. If live SpaceX or Launch Library 2 APIs encounter CORS limits or network timeouts, the dashboard automatically routes data to the high-fidelity local database. **Uptime is guaranteed at 100%**.
 
 ---
 
-## 🎛️ Detailed Component Breakdown
+## 🌐 System Architecture
 
-### 1. Mission Control Boot Screen (`Loader.jsx`)
-*   Simulates a cold boot sequence for the dashboard operating system.
-*   Prints mock shell logs dynamically (e.g., `Establishing downlink... OK`, `Synchronizing trajectories... OK`).
-*   Displays an incremental percentage calculator (0% to 100%) and a glowing progress bar before executing a slide-up exit transition.
+The application utilizes a modular, state-driven model where the main application context handles modals, global timing, and active telemetry feeds, while components update using optimized local loops.
 
-### 2. Flight Dashboard HUD (`Hero.jsx` & `Stats.jsx`)
-*   **Live Countdown**: Calculates and displays a ticking timer (T-Minus Days, Hours, Minutes, Seconds) to the nearest upcoming launch.
-*   **Interactive Telemetry HUD**: Generates mock guidance values (Speed, Altitude, Pitch, Yaw, Roll) that vibrate and update every 150ms to simulate active flight.
-*   **Animated Stats**: Evaluates Total Launches, Success Rate, and Upcoming Manifests, counting up from zero when scrolled into view.
+```mermaid
+graph TD
+    App[App.jsx - Main Controller] -->|Loading Phase| Loader[Loader.jsx - Cold Boot Screen]
+    App -->|Loaded State| Dashboard[Dashboard HUD Console]
+    
+    subgraph UI Layout Components
+        Dashboard --> Navbar[Navbar.jsx - Clock & Status]
+        Dashboard --> Hero[Hero.jsx - Countdown & Telemetry HUD]
+        Dashboard --> Stats[Stats.jsx - Animated Count-up Metrics]
+        Dashboard --> Upcoming[UpcomingLaunches.jsx - Neon Carousel]
+        Dashboard --> Globe[Globe3D.jsx - Three.js Wireframe Earth]
+        Dashboard --> Featured[FeaturedMission.jsx - Canvas Trajectory]
+        Dashboard --> History[LaunchHistory.jsx - Archival Log Database]
+        Dashboard --> Footer[Footer.jsx - Command Dock]
+    end
 
-### 3. Horizontal Manifest Cards (`UpcomingLaunches.jsx`)
-*   Renders upcoming missions in a horizontal scrollbar.
-*   Each card hosts its own countdown timer ticking independently.
-*   Features glassmorphic borders that glow neon-cyan on mouse hover.
+    subgraph Overlay Systems
+        App -->|Ctrl+K / Cmd+K| Search[SearchOverlay.jsx - Spotlight Search]
+        App -->|Select Launch| Console[ConsoleModal.jsx - Flight Director Panel]
+    end
 
-### 4. Featured Mission Trajectory (`FeaturedMission.jsx`)
-*   Widescreen showcase utilizing a parallax background.
-*   Houses a live HTML Canvas telemetry visualizer drawing an orbital apogee curve with wave noise.
-
-### 5. WebGL 3D Interactive Earth (`Globe3D.jsx`)
-*   Renders a 3D Earth mesh using a procedural wireframe material.
-*   Plots launch sites globally based on latitude and longitude coordinates.
-*   Draws glowing Bezier curves projecting flight trajectories into orbit.
-*   Captures drag events for rotation and click raycasting to open overlays showing coordinates and active manifests.
-
-### 6. Archival Log Database (`LaunchHistory.jsx` & `SearchOverlay.jsx`)
-*   **Spotlight Search**: Pressing `Cmd+K` / `Ctrl+K` opens a search overlay matching query strings against rockets and launch pads.
-*   **History Logs**: Grid database showing historical successes and failures, filterable by status or launch vehicle.
-
-### 7. Flight Director Console (`ConsoleModal.jsx`)
-*   Opens a full-screen command dashboard for selected launches.
-*   Includes a checklist where staging events complete sequentially as the simulation progresses.
-*   Features **Initiate Flight** (resets and plays the velocity curve) and **Abort Command** (stops telemetry, flashes warning grids, and shakes the console screen).
+    subgraph Data Flow
+        API[SpaceX & Launch Library 2 APIs] -->|Network Request| DataMgr{Telemetry Controller}
+        Mock[mockLaunchData.js - Local Data] -->|Fallback / CORS Protection| DataMgr
+        DataMgr -->|Provides Telemetry| App
+    end
+```
 
 ---
 
-## 📁 Directory Structure
+## ✨ Core System Features
+
+### 1. `Loader.jsx` | Cold Boot Simulator
+- Simulates an OS boot sequence by dynamically printing aerospace terminal messages (e.g., `Initializing telemetry grids...`, `Synchronizing orbital clocks...`).
+- Animates a progress bar and percentage value (0% to 100%) before performing a sliding exit transition.
+
+### 2. `Globe3D.jsx` | WebGL 3D Planetary Radar
+- Renders an interactive, responsive 3D Earth using **Three.js** with custom wireframe textures and grids.
+- Plots global launch sites (Vandenberg, Cape Canaveral, Satish Dhawan Space Centre, etc.) based on geodesic latitude/longitude coordinates.
+- Projects glowing bezier curves representing active launch trajectory arcs.
+- Supports user orbit control drag/zoom interactions and click raycasting to trigger info overlays.
+
+### 3. `Hero.jsx` & `Stats.jsx` | Flight Cockpit HUD
+- **Live Countdown Clock**: Renders down to the millisecond, calculating time remaining to the nearest global launch.
+- **Dynamic Telemetry Gauges**: Simulates real-time aerospace mechanics (Speed, Altitude, Pitch, Yaw, Roll) vibrating and fluctuating every 150ms to emulate real rocket ascents.
+- **Animated Counter Panels**: Counts up from zero as stats enter the viewport, showcasing total flights, success rates, and active programs.
+
+### 4. `UpcomingLaunches.jsx` | Mission Carousel
+- Renders upcoming international flights in a horizontal glassmorphic carousel.
+- Features a custom neon hover state and independent ticking countdown timer on each card.
+
+### 5. `FeaturedMission.jsx` | Trajectory Graph
+- Renders a featured flight card containing a real-time **HTML Canvas** apogee graph.
+- Generates dynamic math-driven coordinates mapped onto canvas pixels with simulated telemetry noise.
+
+### 6. `SearchOverlay.jsx` | Spotlight Command Search
+- Built-in global keyboard listener (`Cmd+K` / `Ctrl+K`) that reveals a high-tech navigation modal.
+- Allows instant searching across rocket models, staging areas, and active launch pads.
+
+### 7. `ConsoleModal.jsx` | Flight Director Desk
+- Activated by clicking on any launch mission, revealing a multi-gauge command desk.
+- Displays sequential checklist staging phases (Propellant Load, Guidance Lock, Max Q, Orbit Insertion).
+- **Telemetry Simulator Actions**:
+  - **Initiate Flight**: Resets indicators and plots a real-time velocity curve.
+  - **Abort Command**: Flashes emergency red alerts, triggers CRT scanline flickering, and applies a shake vibration effect to the entire dashboard.
+
+---
+
+## 🎨 Cybernetic Theme & Design Tokens
+
+Obsidian Hunt's design language is built around Tailwind CSS v4 custom theme tokens, generating a premium cyberpunk aerospace HUD aesthetic.
+
+### Colors
+| Swatch | Color | HEX | CSS Variable | Purpose |
+| :---: | :--- | :--- | :--- | :--- |
+| <span style="color:#020204; font-size:1.5rem">■</span> | Space Black | `#020204` | `--color-space-black` | Deep void canvas background |
+| <span style="color:#090d1a; font-size:1.5rem">■</span> | Nebula Navy | `#090d1a` | `--color-nebula-navy` | Mid-tone background and secondary panels |
+| <span style="color:#13192b; font-size:1.5rem">■</span> | Cyber Slate | `#13192b` | `--color-cyber-slate` | UI borders and inactive element blocks |
+| <span style="color:#00f0ff; font-size:1.5rem">■</span> | Neon Cyan | `#00f0ff` | `--color-neon-cyan` | Primary HUD accents, active state glows, and telemetry paths |
+| <span style="color:#ff6b00; font-size:1.5rem">■</span> | Rocket Orange | `#ff6b00` | `--color-rocket-orange` | Critical alerts, ignition trajectories, and countdown timers |
+
+### Visual FX
+- **CRT Scanline Overlay**: A repeating linear-gradient overlay loop mimicking military radar screens.
+- **Starfield Parallax**: Multi-layered CSS-animated stars moving vertically at distinct speeds to simulate depth.
+- **Monospace Stability**: Integrated JetBrains Mono with tabular figure styling (`font-mono`), ensuring telemetry metrics don't cause layout shifting during high-speed updates.
+
+---
+
+## 📁 Project Directory Tree
 
 ```text
 src/
-├── main.jsx              # React mounting root
-├── index.css             # Tailwind v4 directives, grids, scanlines, and starfields
-├── App.jsx               # Main state manager (loader switches, modal targets, clock loops)
+├── main.jsx              # React app mounting root
+├── index.css             # Tailwind v4 configuration, CRT effects, stars, & animations
+├── App.jsx               # Global state coodinator (loading, active launch mod, filters)
 ├── data/
-│   └── mockLaunchData.js # Offline backup database (coordinates, checklist phases, vectors)
+│   └── mockLaunchData.js # High-fidelity offline backup dataset (staging checklists, vectors)
 └── components/
     ├── Loader.jsx        # Boot logs terminal & progress bar
     ├── Navbar.jsx        # Translucent glassmorphic header, UTC clock, status dots
@@ -119,37 +151,45 @@ src/
 
 ---
 
-## 🚀 Local Installation & Commands
+## 🛠️ Local Development & Quick Start
 
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/your-username/Obsidian-Hunt.git
-    cd Obsidian-Hunt
-    ```
-2.  **Install dependencies**:
-    ```bash
-    npm install
-    ```
-3.  **Run the local development server**:
-    ```bash
-    npm run dev
-    ```
-4.  **Open in your browser**:
-    Navigate to `http://localhost:5173`.
+> [!IMPORTANT]
+> Make sure you have **Node.js (v18 or higher)** installed on your machine.
 
----
+### 1. Clone & Enter Repository
+```bash
+git clone https://github.com/rahul-rrj/Obsidian-Hunt.git
+cd Obsidian-Hunt
+```
 
-## 🌐 Production Build & Deployment
+### 2. Install Project Dependencies
+```bash
+npm install
+```
 
-To compile the application into static, optimized assets:
+### 3. Spin Up Development Server
+```bash
+npm run dev
+```
+*This starts the Vite dev server. Open [http://localhost:5173](http://localhost:5173) in your browser.*
+
+### 4. Build for Production
 ```bash
 npm run build
 ```
-This outputs a `dist/` folder containing the minified files.
+*Compiles static assets into the `dist/` folder with optimized bundle splitting.*
 
-### Hosting on Netlify (Continuous Deployment)
-1. Link your GitHub repository to [Netlify](https://www.netlify.com).
-2. Configure settings:
-    *   **Build Command**: `npm run build`
-    *   **Publish Directory**: `dist`
-3. Click **Deploy**. Any future commits pushed to the `main` branch will trigger an automatic rebuild.
+---
+
+## 🌐 Deployment Guidelines
+
+This application is configured for continuous integration/continuous deployment (CI/CD) on Netlify.
+
+### Netlify Settings:
+- **Build Command**: `npm run build`
+- **Publish Directory**: `dist`
+- **Production Branch**: `main`
+
+<p align="center">
+  Developed with 🛰️ by the Obsidian Hunt Crew
+</p>
