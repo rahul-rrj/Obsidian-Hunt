@@ -1,87 +1,123 @@
-# 🚀 Obsidian Hunt
-### *"Never Miss Humanity's Next Leap"*
-
-[![Vite](https://img.shields.io/badge/Vite-B73BFF?style=for-the-badge&logo=vite&logoColor=FFD62B)](https://vite.dev/)
-[![React 19](https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-[![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![ThreeJS](https://img.shields.io/badge/ThreeJS-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
-
-Welcome to **Obsidian Hunt**, a premium, highly interactive flight operations and telemetry console designed to look and feel like opening a mission control center at NASA or SpaceX Starbase. 
-
-Unlike standard "list of cards" student templates, **Obsidian Hunt** is engineered as a real-time command dashboard complete with custom WebGL graphics, canvas charting loops, automated flight checklists, and a search console designed to capture recruiter attention immediately.
+# 🛰️ OBSIDIAN HUNT // Mission Control Center
+### *A Premium, Immersive Aerospace Operations Dashboard & Telemetry Visualizer*
 
 ---
 
-## 🎨 Design Philosophy & HUD Aesthetics
+## 📌 Mission Objective (Project Overview)
 
-The design merges the styling cues of a military flight deck, sci-fi HUD telemetry, and modern premium glassmorphism interfaces:
+**Obsidian Hunt** is a premium, high-fidelity web application styled after a modern aerospace command center (inspired by SpaceX Starbase and NASA Flight Operations). Breaking away from standard, static portfolio cards, this project delivers an interactive dashboard displaying mock and live spaceflight telemetry, flight path vectors, orbital coordinates, and launch timelines.
 
-*   **Color System**: Deep Space Void (`#020204`), Nebula Navy (`#090d1a`), and Cyber Slate (`#13192b`).
-*   **Color Accents**: Neon Cyan (`#00f0ff`) representing active/online systems and telemetry feeds; Rocket Orange (`#ff6b00`) representing booster combustion and alerts.
-*   **Visual Atmosphere**: 
-    *   *Moving Starfields*: Lightweight keyframe particle animations.
-    *   *Scanline Overlays*: Vertical looping grid filters representing high-contrast military CRT monitors.
-    *   *Cyber Grid Backdrops*: Sleek coordinate lines mapping spatial alignment.
-    *   *Tabular Figures*: Monospaced typography rules on numerical fields (timestamps, speeds, and coordinates) to prevent visual layout shifts during ticks.
+The primary objective is to demonstrate proficiency in high-performance WebGL graphics, canvas rendering loops, modular React state coordination, and modern Tailwind v4 styling frameworks.
 
 ---
 
-## 🛰️ Core Feature Set
+## 🛠️ Technology Stack & Tools Used
 
-| Feature | Portfolio Impact Score | Description |
-| :--- | :---: | :--- |
-| **Interactive 3D WebGL Globe** | **10/10** | Custom procedurally wireframed Earth globe built with vanilla Three.js. Maps global spaceports (Florida, Texas, India, Kourou), renders parabolic trajectory arches, and supports click details with draggable rotation controls. |
-| **Telemetry Flight Desk Modal** | **9/10** | Clicking any mission opens a deep telemetry board featuring an interactive flight timeline checklist, current staging status indicators, and real-time velocity curves. |
-| **Live Canvas Telemetry Charts** | **9/10** | High-performance HTML Canvas rendering loops plotting velocity/apogee curves. Supports interactive commands: **Initiate Flight** triggers staged climbs; **Abort Command** triggers emergency alerts and screen vibration shakes. |
-| **Spotlight Command Search** | **8/10** | Global keyboard search overlay (`Cmd+K` or `Ctrl+K`) that searches upcoming manifests, historical databases, and rocket specs with instant match highlights. |
-| **OS Boot Terminal Loader** | **8/10** | Immersive booting console that prints mock telemetry initialization logs, progress bars, and a rocket liftoff animation before entering the console dashboard. |
-| **Rocket Fleet Gallery** | **7/10** | Glassmorphic specifications carousel containing detailed engineering specs (height, thrust, propellant type, stages, and payload capacity) for active fleets (Falcon 9, Starship, SLS). |
-| **Mobile Dock Navigation** | **7/10** | Responsive floating bottom app bar optimized for mobile touch viewports, supporting smooth section anchor scrolling. |
+The application is built on a modern frontend architecture selected for rendering speed, modularity, and fluid visual animations:
+
+### 1. Core Framework & Bundler
+*   **React 19**: Leverages React's component-driven architecture to manage complex, overlapping UI states (e.g., launching modals, search overlays, active navigation sections) and handles virtual DOM updates efficiently.
+*   **Vite 8**: Serves as the build tool and development server, utilizing native ES modules for instantaneous Hot Module Replacement (HMR) and optimized Rollup-based production chunking.
+
+### 2. Styling & HUD Theme Engine
+*   **Tailwind CSS v4**: Integrated using the official `@tailwindcss/vite` compiler plugin. Themes are defined directly inside `src/index.css` using the `@theme` directive, which compiles variables into utility classes.
+*   **Custom CSS Effects**:
+    *   *CRT Scanlines*: A linear-gradient overlay loop mimicking retro military radar monitors.
+    *   *Cyber Grid Backdrops*: Vector grids providing spatial alignment.
+    *   *Starfield Parallax*: CSS-animated vertical scrolling star particles.
+    *   *Tabular Figures*: Monospaced font configuration (`font-mono` using JetBrains Mono) that keeps layout positions stable while telemetry coordinates and countdown timers update.
+
+### 3. Graphics & Animation Libraries
+*   **Three.js (WebGL)**: Powers the interactive 3D Globe. Implemented inside a vanilla React `useRef` to maintain lightweight DOM attachment and prevent version conflicts with React 19.
+*   **HTML Canvas API**: Used in the featured banner and flight controller modals to render real-time telemetry curves, grid axes, and rocket apogee trajectories without taxing the main DOM thread.
+*   **Framer Motion**: Manages smooth spring-physics micro-interactions (e.g., card tilts, button scale reactions, fade-in lists, and modal slide-ins).
+*   **Lucide React**: Provides sleek, vector-based aerospace iconography.
 
 ---
 
-## ⚙️ Tech Stack & Dependencies
+## 🔌 Data Layer & APIs Used
 
-*   **Core Framework**: React 19 & Vite 8 (fast, modern ES module bundling)
-*   **Styling**: Tailwind CSS v4 (incorporating `@tailwindcss/vite` for CSS variable compilation)
-*   **Graphics Engine**: Three.js (WebGL 3D Earth)
-*   **Animation**: Framer Motion (fluid spring-physics state transitions)
-*   **Iconography**: Lucide React (aerospace vectors)
-*   **Data Controller**: Fail-safe hybrid model that bridges remote API requests with offline mock datasets.
+To ensure robust uptime and prevent rate-limiting or CORS issues during portfolio reviews, the application utilizes a **hybrid API architecture**:
+
+### 1. SpaceX API
+*   **Endpoints Queried**: `/v4/launches` and `/v4/rockets`.
+*   **Usage**: Provides data regarding launch sites (Vandenberg, Cape Canaveral), rocket specs (height, thrust, mass), payloads (Dragon, Starlink), and historical flight success rates.
+
+### 2. Launch Library 2 API
+*   **Usage**: Used to fetch global spaceflight scheduling datasets, including international launch manifests (ISRO, ESA, Arianespace).
+
+### 3. Fail-Safe Hybrid Telemetry Controller
+*   **The Controller**: If external requests fail, time out, or hit CORS blockades, the app immediately redirects data flow to `src/data/mockLaunchData.js`.
+*   **Mock Content**: A comprehensive backup dataset detailing coordinates, checklist staging phases (Propellant Load, Guidance Lock, Max Q, Orbit Insertion), and telemetry coordinate curves. This ensures 100% uptime for recruiter demonstrations.
 
 ---
 
-## 📂 Project Architecture
+## 🎛️ Detailed Component Breakdown
+
+### 1. Mission Control Boot Screen (`Loader.jsx`)
+*   Simulates a cold boot sequence for the dashboard operating system.
+*   Prints mock shell logs dynamically (e.g., `Establishing downlink... OK`, `Synchronizing trajectories... OK`).
+*   Displays an incremental percentage calculator (0% to 100%) and a glowing progress bar before executing a slide-up exit transition.
+
+### 2. Flight Dashboard HUD (`Hero.jsx` & `Stats.jsx`)
+*   **Live Countdown**: Calculates and displays a ticking timer (T-Minus Days, Hours, Minutes, Seconds) to the nearest upcoming launch.
+*   **Interactive Telemetry HUD**: Generates mock guidance values (Speed, Altitude, Pitch, Yaw, Roll) that vibrate and update every 150ms to simulate active flight.
+*   **Animated Stats**: Evaluates Total Launches, Success Rate, and Upcoming Manifests, counting up from zero when scrolled into view.
+
+### 3. Horizontal Manifest Cards (`UpcomingLaunches.jsx`)
+*   Renders upcoming missions in a horizontal scrollbar.
+*   Each card hosts its own countdown timer ticking independently.
+*   Features glassmorphic borders that glow neon-cyan on mouse hover.
+
+### 4. Featured Mission Trajectory (`FeaturedMission.jsx`)
+*   Widescreen showcase utilizing a parallax background.
+*   Houses a live HTML Canvas telemetry visualizer drawing an orbital apogee curve with wave noise.
+
+### 5. WebGL 3D Interactive Earth (`Globe3D.jsx`)
+*   Renders a 3D Earth mesh using a procedural wireframe material.
+*   Plots launch sites globally based on latitude and longitude coordinates.
+*   Draws glowing Bezier curves projecting flight trajectories into orbit.
+*   Captures drag events for rotation and click raycasting to open overlays showing coordinates and active manifests.
+
+### 6. Archival Log Database (`LaunchHistory.jsx` & `SearchOverlay.jsx`)
+*   **Spotlight Search**: Pressing `Cmd+K` / `Ctrl+K` opens a search overlay matching query strings against rockets and launch pads.
+*   **History Logs**: Grid database showing historical successes and failures, filterable by status or launch vehicle.
+
+### 7. Flight Director Console (`ConsoleModal.jsx`)
+*   Opens a full-screen command dashboard for selected launches.
+*   Includes a checklist where staging events complete sequentially as the simulation progresses.
+*   Features **Initiate Flight** (resets and plays the velocity curve) and **Abort Command** (stops telemetry, flashes warning grids, and shakes the console screen).
+
+---
+
+## 📁 Directory Structure
 
 ```text
 src/
-├── main.jsx              # React Entry
-├── index.css             # Tailwind v4 imports, Starfield animations, Cyber Grid utilities
-├── App.jsx               # Application coordinator (modal targets, scroll listeners, clock)
+├── main.jsx              # React mounting root
+├── index.css             # Tailwind v4 directives, grids, scanlines, and starfields
+├── App.jsx               # Main state manager (loader switches, modal targets, clock loops)
 ├── data/
-│   └── mockLaunchData.js # Dataset (launch sites, specs, telemetry curves, history)
+│   └── mockLaunchData.js # Offline backup database (coordinates, checklist phases, vectors)
 └── components/
-    ├── Loader.jsx        # Booting HUD terminal & progress bar
-    ├── Navbar.jsx        # Glassmorphic header, UTC clock, status flags
-    ├── Hero.jsx          # Live ticking countdown & flight HUD
-    ├── Stats.jsx         # Counter panels rolling up on load
-    ├── UpcomingLaunches.jsx # Horizontal card track with countdown clocks
-    ├── FeaturedMission.jsx  # Flagship showcase & live Canvas graph
-    ├── Globe3D.jsx       # Three.js 3D Earth, bezier trajectories, and coordinates
+    ├── Loader.jsx        # Boot logs terminal & progress bar
+    ├── Navbar.jsx        # Translucent glassmorphic header, UTC clock, status dots
+    ├── Hero.jsx          # Live launch countdown & telemetry cockpit
+    ├── Stats.jsx         # Count-up panels (Launches, Success Rate, Manifests)
+    ├── UpcomingLaunches.jsx # Horizontal card swipe with card clocks
+    ├── FeaturedMission.jsx  # Banner and HTML Canvas telemetry graph
+    ├── Globe3D.jsx       # ThreeJS 3D Earth, bezier curves, drag orbit rotations
     ├── Timeline.jsx      # Scroll-triggered upcoming milestone nodes
-    ├── RocketGallery.jsx # Carousel detailing vehicle engineering specs
-    ├── LaunchHistory.jsx # Tabular log database with status filters
-    ├── SearchOverlay.jsx # Mac Spotlight-style overlay (Cmd+K)
-    ├── ConsoleModal.jsx  # Detailed telemetry desk (Initiate/Abort commands, shakes)
+    ├── RocketGallery.jsx # Carousel displaying rocket specs (Falcon 9, Starship, SLS)
+    ├── LaunchHistory.jsx # Searchable log database with status filters
+    ├── SearchOverlay.jsx # Spotlight search overlay (Cmd+K)
+    ├── ConsoleModal.jsx  # Flight controller desk (Initiate/Abort commands, shakes)
     └── Footer.jsx        # Mobile navigation dock
 ```
 
 ---
 
-## 🚀 Setup & Installation (Local Execution)
-
-Follow these commands to run the project locally:
+## 🚀 Local Installation & Commands
 
 1.  **Clone the repository**:
     ```bash
@@ -97,19 +133,21 @@ Follow these commands to run the project locally:
     npm run dev
     ```
 4.  **Open in your browser**:
-    Navigate to the URL printed in the terminal (usually `http://localhost:5173`).
+    Navigate to `http://localhost:5173`.
 
 ---
 
-## 🌐 Production Deployment
+## 🌐 Production Build & Deployment
 
-Since the project builds into static assets, it can be deployed to **Netlify** or **Vercel** for free:
+To compile the application into static, optimized assets:
+```bash
+npm run build
+```
+This outputs a `dist/` folder containing the minified files.
 
-### Netlify Continuous Integration (Recommended)
-1. Push your code to a GitHub repository.
-2. Log in to [Netlify](https://www.netlify.com).
-3. Click **Add new site** > **Import an existing project** > Select your **GitHub** repo.
-4. Netlify will auto-detect Vite compile settings:
+### Hosting on Netlify (Continuous Deployment)
+1. Link your GitHub repository to [Netlify](https://www.netlify.com).
+2. Configure settings:
     *   **Build Command**: `npm run build`
     *   **Publish Directory**: `dist`
-5. Click **Deploy**. Any future push to your `main` branch will automatically build and publish updates.
+3. Click **Deploy**. Any future commits pushed to the `main` branch will trigger an automatic rebuild.
