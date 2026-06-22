@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Play, ShieldAlert, Cpu, Terminal, Compass, TrendingUp, RefreshCw } from 'lucide-react';
+import { X, Play, ShieldAlert, Terminal, Compass } from 'lucide-react';
 
-export default function ConsoleModal({ launch, onClose }) {
+export default function ConsoleModal({ launch, onClose, isInline = false, onAbortStateChange }) {
   if (!launch) return null;
 
   const canvasRef = useRef(null);
@@ -20,12 +20,13 @@ export default function ConsoleModal({ launch, onClose }) {
 
   // Handle Escape key
   useEffect(() => {
+    if (isInline) return;
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onClose]);
+  }, [onClose, isInline]);
 
   // Telemetry Simulation ticks
   useEffect(() => {
@@ -155,7 +156,7 @@ export default function ConsoleModal({ launch, onClose }) {
     draw();
 
     return () => cancelAnimationFrame(animId);
-  }, [sec, aborted]);
+  }, [sec, aborted, simulationActive]);
 
   const handleInitiate = () => {
     setAborted(false);
@@ -165,13 +166,177 @@ export default function ConsoleModal({ launch, onClose }) {
     setStage('BOOSTER_PROPULSION');
     setChecklistIndex(3);
     setSimulationActive(true);
+    if (onAbortStateChange) onAbortStateChange(false);
   };
 
   const handleAbort = () => {
     setSimulationActive(false);
     setAborted(true);
     setStage('MISSION_ABORTED_SHUTDOWN');
+    if (onAbortStateChange) onAbortStateChange(true);
   };
+
+  const handleClose = () => {
+    if (onAbortStateChange) onAbortStateChange(false);
+    if (onClose) onClose();
+  };
+
+  const renderContent = (
+    <div
+      className={`w-full h-full bg-cyber-slate/90 border rounded-lg shadow-2xl relative z-10 flex flex-col overflow-hidden min-h-0 ${
+        aborted ? 'border-rose-500/40 shadow-[0_0_50px_rgba(239,68,68,0.2)]' : 'border-neon-cyan/20 shadow-[0_0_50px_rgba(255,158,0,0.15)]'
+      }`}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-white/10 bg-space-black/60 shrink-0">
+        <div>
+          <span className="text-[9px] text-slate-500 block uppercase">FLIGHT DIRECTORS TELEMETRY CORE</span>
+          <h2 className="text-sm font-bold text-white uppercase flex items-center gap-1.5 mt-0.5">
+            <Terminal size={14} className="text-neon-cyan" /> {launch.missionName}
+          </h2>
+        </div>
+        {onClose && (
+          <button 
+            onClick={handleClose}
+            className="text-slate-400 hover:text-rose-500 border border-transparent hover:border-white/10 p-1 rounded transition-all cursor-pointer"
+          >
+            <X size={18} />
+          </button>
+        )}
+      </div>
+
+      {/* Grid Panels */}
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-12 gap-6 min-h-0">
+        
+        {/* Left side: Checklist and specs (col-7) */}
+        <div className="md:col-span-7 flex flex-col gap-6 text-left min-h-0">
+          {/* Mission Specs Cards */}
+          <div className="grid grid-cols-2 gap-4 shrink-0">
+            <div className="bg-space-black/55 p-3 border border-white/5 rounded">
+              <span className="text-[9px] text-slate-500 block uppercase">Rocket fleet</span>
+              <span className="text-xs font-bold text-slate-200 mt-1 block truncate">{launch.rocketName}</span>
+            </div>
+            <div className="bg-space-black/55 p-3 border border-white/5 rounded">
+              <span className="text-[9px] text-slate-500 block uppercase">Launch Site</span>
+              <span className="text-xs font-bold text-slate-200 mt-1 block truncate">{launch.launchSite?.split(',')[0]}</span>
+            </div>
+            <div className="bg-space-black/55 p-3 border border-white/5 rounded">
+              <span className="text-[9px] text-slate-500 block uppercase">Target Orbit</span>
+              <span className="text-xs font-bold text-slate-200 mt-1 block">{launch.targetOrbit}</span>
+            </div>
+            <div className="bg-space-black/55 p-3 border border-white/5 rounded">
+              <span className="text-[9px] text-slate-500 block uppercase">Payload cargo</span>
+              <span className="text-xs font-bold text-slate-200 mt-1 block truncate">{launch.payload}</span>
+            </div>
+          </div>
+
+          {/* Status Sequence Checklist */}
+          <div className="bg-space-black/45 border border-white/5 rounded p-4 flex-1 min-h-0 flex flex-col">
+            <span className="text-[10px] text-slate-500 block uppercase font-bold mb-3 border-b border-white/5 pb-2">
+              LAUNCH STAGE CHECKLIST
+            </span>
+            <div className="flex flex-col gap-2.5 overflow-y-auto flex-1">
+              {launch.checklist?.map((step, idx) => {
+                const isChecked = idx < checklistIndex;
+                return (
+                  <div 
+                    key={step.id} 
+                    className={`flex items-center justify-between text-xs transition-colors ${
+                      isChecked ? 'text-emerald-400' : 'text-slate-500'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`h-2.5 w-2.5 rounded-full ${
+                        isChecked ? 'bg-emerald-400' : 'bg-slate-700'
+                      }`} />
+                      <span>{step.name}</span>
+                    </div>
+                    <span className="text-[10px] text-slate-500 italic shrink-0">
+                      {isChecked ? '✓ GO' : '○ STBY'}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* Right side: Live Telemetry Canvas & Controllers (col-5) */}
+        <div className="md:col-span-5 flex flex-col justify-between gap-6 min-h-0">
+          
+          {/* Telemetry monitor readings */}
+          <div className={`p-4 border rounded relative overflow-hidden scanlines bg-space-black/60 ${
+            aborted ? 'border-rose-500/20' : 'border-neon-cyan/20'
+          } shrink-0`}>
+            {/* Visual state headers */}
+            <div className="flex items-center justify-between text-[10px] text-slate-500 border-b border-white/5 pb-2 mb-3">
+              <span className="flex items-center gap-1.5"><Compass size={12} className="text-neon-cyan" /> ORBITAL_TRAJ_FLOW</span>
+              <span className={aborted ? 'text-rose-400' : 'text-neon-cyan animate-pulse'}>
+                {aborted ? '▲ TERMINATED' : simulationActive ? '● SIM_RUNNING' : '■ TELEMETRY_STBY'}
+              </span>
+            </div>
+
+            {/* Values */}
+            <div className="flex justify-between items-center py-1">
+              <span className="text-[10px] text-slate-400">FLIGHT TIME:</span>
+              <span className="text-slate-100 font-bold tabular-nums">{sec}s</span>
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-[10px] text-slate-400">VELOCITY:</span>
+              <span className="text-slate-100 font-bold tabular-nums">{speed.toLocaleString()} km/h</span>
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-[10px] text-slate-400">ALTITUDE:</span>
+              <span className="text-slate-100 font-bold tabular-nums">{altitude.toLocaleString()} km</span>
+            </div>
+            <div className="flex justify-between items-center py-1">
+              <span className="text-[10px] text-slate-400">SYS_STAGE:</span>
+              <span className={`font-bold text-[10px] uppercase ${aborted ? 'text-rose-400' : 'text-neon-cyan'}`}>
+                {stage}
+              </span>
+            </div>
+          </div>
+
+          {/* HTML Canvas */}
+          <div className="border border-white/5 bg-space-black rounded overflow-hidden flex-1 min-h-[120px]">
+            <canvas 
+              ref={canvasRef} 
+              width={350} 
+              height={144} 
+              className="w-full h-full block"
+            />
+          </div>
+
+          {/* Flight controllers desk actions */}
+          <div className="grid grid-cols-2 gap-3 shrink-0">
+            <button
+              onClick={handleInitiate}
+              className="flex items-center justify-center gap-1.5 bg-neon-cyan hover:bg-neon-cyan/90 text-space-black font-display font-extrabold text-xs py-3 rounded transition-all cursor-pointer glow-cyan"
+            >
+              <Play size={12} /> INITIATE FLIGHT
+            </button>
+            <button
+              onClick={handleAbort}
+              className="flex items-center justify-center gap-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 hover:border-rose-500/50 font-display font-extrabold text-xs py-3 rounded transition-all cursor-pointer"
+            >
+              <ShieldAlert size={12} /> ABORT COMMAND
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* HUD status footer bar */}
+      <div className="bg-space-black/80 px-6 py-2.5 border-t border-white/10 flex items-center justify-between text-[9px] text-slate-500 shrink-0">
+        <span>SYS_LINK: PRIMARY_ACTIVE</span>
+        <span className="text-neon-cyan/40">OBSIDIAN HUNT OPERATIONS TERMINAL</span>
+      </div>
+    </div>
+  );
+
+  if (isInline) {
+    return renderContent;
+  }
 
   return (
     <AnimatePresence>
@@ -181,7 +346,7 @@ export default function ConsoleModal({ launch, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute inset-0 bg-[#020204]/90 backdrop-blur-sm"
         />
 
@@ -192,152 +357,9 @@ export default function ConsoleModal({ launch, onClose }) {
             y: [0, 4, -4, 4, -4, 0]
           } : {}}
           transition={{ duration: 0.4 }}
-          className={`w-full max-w-4xl bg-cyber-slate/90 border rounded-lg shadow-2xl relative z-10 flex flex-col max-h-[90vh] overflow-hidden ${
-            aborted ? 'border-rose-500/40 shadow-[0_0_50px_rgba(239,68,68,0.2)]' : 'border-neon-cyan/20 shadow-[0_0_50px_rgba(255,158,0,0.15)]'
-          }`}
+          className="w-full max-w-4xl max-h-[90vh] flex flex-col relative z-10"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10 bg-space-black/60 shrink-0">
-            <div>
-              <span className="text-[9px] text-slate-500 block uppercase">FLIGHT DIRECTORS TELEMETRY CORE</span>
-              <h2 className="text-sm font-bold text-white uppercase flex items-center gap-1.5 mt-0.5">
-                <Terminal size={14} className="text-neon-cyan" /> {launch.missionName}
-              </h2>
-            </div>
-            <button 
-              onClick={onClose}
-              className="text-slate-400 hover:text-rose-500 border border-transparent hover:border-white/10 p-1 rounded transition-all"
-            >
-              <X size={18} />
-            </button>
-          </div>
-
-          {/* Modal Grid Panels scrollable */}
-          <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
-            
-            {/* Left side: Checklist and specs (col-7) */}
-            <div className="md:col-span-7 flex flex-col gap-6 text-left">
-              {/* Mission Specs Cards */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-space-black/55 p-3.5 border border-white/5 rounded">
-                  <span className="text-[9px] text-slate-500 block uppercase">Rocket fleet</span>
-                  <span className="text-xs font-bold text-slate-200 mt-1 block">{launch.rocketName}</span>
-                </div>
-                <div className="bg-space-black/55 p-3.5 border border-white/5 rounded">
-                  <span className="text-[9px] text-slate-500 block uppercase">Launch Site</span>
-                  <span className="text-xs font-bold text-slate-200 mt-1 block truncate">{launch.launchSite.split(',')[0]}</span>
-                </div>
-                <div className="bg-space-black/55 p-3.5 border border-white/5 rounded">
-                  <span className="text-[9px] text-slate-500 block uppercase">Target Orbit</span>
-                  <span className="text-xs font-bold text-slate-200 mt-1 block">{launch.targetOrbit}</span>
-                </div>
-                <div className="bg-space-black/55 p-3.5 border border-white/5 rounded">
-                  <span className="text-[9px] text-slate-500 block uppercase">Payload cargo</span>
-                  <span className="text-xs font-bold text-slate-200 mt-1 block truncate">{launch.payload}</span>
-                </div>
-              </div>
-
-              {/* Status Sequence Checklist */}
-              <div className="bg-space-black/45 border border-white/5 rounded p-5">
-                <span className="text-[10px] text-slate-500 block uppercase font-bold mb-3 border-b border-white/5 pb-2">
-                  LAUNCH STAGE CHECKLIST
-                </span>
-                <div className="flex flex-col gap-2.5">
-                  {launch.checklist?.map((step, idx) => {
-                    const isChecked = idx < checklistIndex;
-                    return (
-                      <div 
-                        key={step.id} 
-                        className={`flex items-center justify-between text-xs transition-colors ${
-                          isChecked ? 'text-emerald-400' : 'text-slate-500'
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className={`h-2.5 w-2.5 rounded-full ${
-                            isChecked ? 'bg-emerald-400' : 'bg-slate-700'
-                          }`} />
-                          <span>{step.name}</span>
-                        </div>
-                        <span className="text-[10px] text-slate-500 italic shrink-0 hidden sm:inline">
-                          {isChecked ? '✓ GO' : '○ STBY'}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Right side: Live Telemetry Canvas & Controllers (col-5) */}
-            <div className="md:col-span-5 flex flex-col justify-between gap-6">
-              
-              {/* Telemetry monitor readings */}
-              <div className={`p-4 border rounded relative overflow-hidden scanlines bg-space-black/60 ${
-                aborted ? 'border-rose-500/20' : 'border-neon-cyan/20'
-              }`}>
-                {/* Visual state headers */}
-                <div className="flex items-center justify-between text-[10px] text-slate-500 border-b border-white/5 pb-2 mb-3">
-                  <span className="flex items-center gap-1.5"><Compass size={12} className="text-neon-cyan" /> ORBITAL_TRAJ_FLOW</span>
-                  <span className={aborted ? 'text-rose-400' : 'text-neon-cyan animate-pulse'}>
-                    {aborted ? '▲ TERMINATED' : simulationActive ? '● SIM_RUNNING' : '■ TELEMETRY_STBY'}
-                  </span>
-                </div>
-
-                {/* Values */}
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-[10px] text-slate-400">FLIGHT TIME:</span>
-                  <span className="text-slate-100 font-bold tabular-nums">{sec}s</span>
-                </div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-[10px] text-slate-400">VELOCITY:</span>
-                  <span className="text-slate-100 font-bold tabular-nums">{speed.toLocaleString()} km/h</span>
-                </div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-[10px] text-slate-400">ALTITUDE:</span>
-                  <span className="text-slate-100 font-bold tabular-nums">{altitude.toLocaleString()} km</span>
-                </div>
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-[10px] text-slate-400">SYS_STAGE:</span>
-                  <span className={`font-bold text-[10px] uppercase ${aborted ? 'text-rose-400' : 'text-neon-cyan'}`}>
-                    {stage}
-                  </span>
-                </div>
-              </div>
-
-              {/* HTML Canvas */}
-              <div className="border border-white/5 bg-space-black rounded overflow-hidden h-36">
-                <canvas 
-                  ref={canvasRef} 
-                  width={350} 
-                  height={144} 
-                  className="w-full h-full block"
-                />
-              </div>
-
-              {/* Flight controllers desk actions */}
-              <div className="grid grid-cols-2 gap-3 shrink-0">
-                <button
-                  onClick={handleInitiate}
-                  className="flex items-center justify-center gap-1.5 bg-neon-cyan hover:bg-neon-cyan/90 text-space-black font-display font-extrabold text-xs py-3 rounded transition-all cursor-pointer glow-cyan"
-                >
-                  <Play size={12} /> INITIATE FLIGHT
-                </button>
-                <button
-                  onClick={handleAbort}
-                  className="flex items-center justify-center gap-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 hover:border-rose-500/50 font-display font-extrabold text-xs py-3 rounded transition-all cursor-pointer"
-                >
-                  <ShieldAlert size={12} /> ABORT COMMAND
-                </button>
-              </div>
-
-            </div>
-          </div>
-
-          {/* HUD status footer bar */}
-          <div className="bg-space-black/80 px-6 py-2.5 border-t border-white/10 flex items-center justify-between text-[9px] text-slate-500 shrink-0">
-            <span>SYS_LINK: PRIMARY_ACTIVE</span>
-            <span className="text-neon-cyan/40">OBSIDIAN HUNT OPERATIONS TERMINAL</span>
-          </div>
+          {renderContent}
         </motion.div>
       </div>
     </AnimatePresence>

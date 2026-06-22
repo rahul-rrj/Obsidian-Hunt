@@ -21,7 +21,7 @@ function CountUpNumber({ endValue, duration = 1500, suffix = "" }) {
   return <span className="tabular-nums">{count}{suffix}</span>;
 }
 
-export default function Stats() {
+export default function Stats({ isWidget = false }) {
   const statsItems = [
     {
       label: 'TOTAL LAUNCHES',
@@ -51,6 +51,37 @@ export default function Stats() {
       desc: 'Active launch Manifest'
     }
   ];
+
+  if (isWidget) {
+    return (
+      <div className="w-full flex flex-col gap-2.5 font-mono relative z-10">
+        {statsItems.map((stat, idx) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={idx}
+              className={`p-3 rounded-lg border backdrop-blur-md flex items-center justify-between transition-all duration-300 ${stat.glow}`}
+            >
+              <div className="text-left">
+                <div className="text-[9px] text-slate-500 uppercase tracking-widest font-semibold">
+                  {stat.label}
+                </div>
+                <div className={`text-2xl font-bold font-display ${stat.accent}`}>
+                  <CountUpNumber endValue={stat.value} suffix={stat.suffix} />
+                </div>
+                <div className="text-[9px] text-slate-400">
+                  {stat.desc}
+                </div>
+              </div>
+              <div className={`p-2 rounded bg-space-black/50 border border-white/5 ${stat.accent} filter drop-shadow-[0_0_8px_rgba(255,255,255,0.05)]`}>
+                <Icon size={16} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full py-10 px-6 max-w-7xl mx-auto relative select-none font-mono">

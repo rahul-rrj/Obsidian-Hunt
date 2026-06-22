@@ -26,7 +26,7 @@ const getPayloadPercent = (payloadStr) => {
   return Math.min(100, Math.max(15, Math.round((val / 250000) * 100)));
 };
 
-export default function RocketGallery() {
+export default function RocketGallery({ isWidget = false }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNext = () => {
@@ -38,6 +38,101 @@ export default function RocketGallery() {
   };
 
   const activeRocket = ROCKETS[currentIndex];
+
+  if (isWidget) {
+    return (
+      <div className="w-full h-full flex flex-col min-h-0 select-none font-mono">
+        {/* Header selector */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+          <div className="text-[10px] text-rocket-orange font-bold tracking-widest uppercase">
+            FLEET SPECS
+          </div>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={handlePrev} 
+              className="p-1 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <span className="text-[10px] text-slate-300 font-bold">{activeRocket.name}</span>
+            <button 
+              onClick={handleNext} 
+              className="p-1 rounded bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white cursor-pointer"
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </div>
+
+        {/* Chassis card */}
+        <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-4 min-h-0">
+          <div className="relative h-36 rounded-lg overflow-hidden border border-white/10 shrink-0">
+            <img
+              src={activeRocket.image}
+              alt={activeRocket.name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-space-black/90 via-space-black/20 to-transparent" />
+            <div className="absolute bottom-2 left-2 z-10 text-left">
+              <span className="text-[8px] font-bold text-rocket-orange uppercase tracking-widest block">Operator</span>
+              <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">{activeRocket.manufacturer}</span>
+            </div>
+            <div className="absolute bottom-2 right-2 bg-space-black/80 backdrop-blur-sm border border-emerald-500/20 px-2 py-0.5 rounded text-[8px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+              {activeRocket.successRate}% OK
+            </div>
+          </div>
+
+          {/* Details / Specifications */}
+          <div className="flex flex-col gap-3">
+            <div className="bg-space-black/40 border border-white/5 rounded p-3 text-[11px] text-slate-300 leading-relaxed text-left">
+              <span className="text-[9px] text-slate-500 block uppercase font-bold mb-1">Fleet Description</span>
+              {activeRocket.description}
+            </div>
+
+            {/* Metrics */}
+            <div className="flex flex-col gap-2 border border-white/5 bg-space-black/25 rounded p-3 text-xs">
+              {/* Height */}
+              <div className="flex justify-between items-center text-[10px]">
+                <span className="text-slate-400">VEHICLE HEIGHT</span>
+                <span className="text-white font-bold">{activeRocket.height}</span>
+              </div>
+              <div className="h-1 bg-space-black rounded-full overflow-hidden">
+                <div className="h-full bg-neon-cyan rounded-full" style={{ width: `${getHeightPercent(activeRocket.height)}%` }} />
+              </div>
+
+              {/* Mass */}
+              <div className="flex justify-between items-center text-[10px] mt-1">
+                <span className="text-slate-400">LAUNCH MASS</span>
+                <span className="text-white font-bold">{activeRocket.mass}</span>
+              </div>
+              <div className="h-1 bg-space-black rounded-full overflow-hidden">
+                <div className="h-full bg-neon-cyan rounded-full" style={{ width: `${getMassPercent(activeRocket.mass)}%` }} />
+              </div>
+
+              {/* Thrust */}
+              <div className="flex justify-between items-center text-[10px] mt-1">
+                <span className="text-slate-400">BOOSTER THRUST</span>
+                <span className="text-white font-bold">{activeRocket.thrust}</span>
+              </div>
+              <div className="h-1 bg-space-black rounded-full overflow-hidden">
+                <div className="h-full bg-rocket-orange rounded-full" style={{ width: `${getThrustPercent(activeRocket.thrust)}%` }} />
+              </div>
+
+              {/* Payload */}
+              <div className="flex justify-between items-center text-[10px] mt-1">
+                <span className="text-slate-400">LEO PAYLOAD CAPACITY</span>
+                <span className="text-white font-bold">{activeRocket.payloadLEO}</span>
+              </div>
+              <div className="h-1 bg-space-black rounded-full overflow-hidden">
+                <div className="h-full bg-emerald-400 rounded-full" style={{ width: `${getPayloadPercent(activeRocket.payloadLEO)}%` }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section id="rockets" className="py-20 px-6 max-w-7xl mx-auto select-none border-b border-white/5 relative font-mono">

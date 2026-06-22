@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Play, Compass, ArrowRight, Gauge, Radio, ShieldAlert } from 'lucide-react';
 import { UPCOMING_LAUNCHES } from '../data/mockLaunchData';
 
-export default function Hero({ onExploreClick, onWatchMission }) {
+export default function Hero({ onExploreClick, onWatchMission, isWidget = false }) {
   // Find nearest upcoming launch
   const nextLaunch = UPCOMING_LAUNCHES.reduce((prev, curr) => {
     return new Date(curr.launchDate) < new Date(prev.launchDate) ? curr : prev;
@@ -49,8 +49,6 @@ export default function Hero({ onExploreClick, onWatchMission }) {
     const interval = setInterval(() => {
       t += 0.1;
       setTelemetry(prev => {
-        const isSimulatingActiveFlight = nextLaunch.id === 'starship-f7';
-        // Random drift/vibration
         const speedDrift = Math.random() * 2 - 1;
         const altitudeDrift = Math.random() * 0.1 - 0.05;
         
@@ -69,6 +67,99 @@ export default function Hero({ onExploreClick, onWatchMission }) {
   }, [nextLaunch.id]);
 
   const padZero = (num) => String(num).padStart(2, '0');
+
+  if (isWidget) {
+    return (
+      <div className="w-full flex flex-col gap-4 font-mono z-10 select-none">
+        {/* Countdown Panel */}
+        <div className="w-full bg-space-black/60 border border-white/10 backdrop-blur-md p-4 rounded-lg relative">
+          <div className="absolute top-2 right-4 flex items-center gap-1 text-[8px] text-slate-500">
+            <span>PAD: {nextLaunch.launchSite}</span>
+            <span className="text-neon-cyan animate-pulse">● ACTIVE</span>
+          </div>
+          <div className="text-[9px] text-slate-500 mb-2 tracking-widest uppercase">
+            NEXT LAUNCH COUNTDOWN
+          </div>
+          <div className="text-xs font-bold text-white mb-2 truncate">
+            {nextLaunch.missionName} ({nextLaunch.rocketName})
+          </div>
+          {/* Timers */}
+          <div className="grid grid-cols-4 gap-2 text-center">
+            <div className="bg-cyber-slate/40 border border-white/5 p-2 rounded">
+              <div className="text-lg font-bold text-white font-mono tabular-nums">{padZero(timeLeft.days)}</div>
+              <div className="text-[7px] text-slate-500 uppercase">DAYS</div>
+            </div>
+            <div className="bg-cyber-slate/40 border border-white/5 p-2 rounded">
+              <div className="text-lg font-bold text-white font-mono tabular-nums">{padZero(timeLeft.hours)}</div>
+              <div className="text-[7px] text-slate-500 uppercase">HRS</div>
+            </div>
+            <div className="bg-cyber-slate/40 border border-white/5 p-2 rounded">
+              <div className="text-lg font-bold text-white font-mono tabular-nums">{padZero(timeLeft.minutes)}</div>
+              <div className="text-[7px] text-slate-500 uppercase">MINS</div>
+            </div>
+            <div className="bg-cyber-slate/40 border border-white/5 p-2 rounded">
+              <div className="text-lg font-bold text-neon-cyan font-mono tabular-nums drop-shadow-[0_0_8px_rgba(255,158,0,0.4)]">{padZero(timeLeft.seconds)}</div>
+              <div className="text-[7px] text-slate-500 uppercase">SECS</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Flight Telemetry HUD Widget */}
+        <div className="w-full bg-cyber-slate/20 border border-neon-cyan/20 backdrop-blur-md rounded-lg p-4 font-mono overflow-hidden relative shadow-[inset_0_0_30px_rgba(255,158,0,0.05)] scanlines">
+          {/* HUD Header */}
+          <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+            <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+              <Compass size={10} className="text-neon-cyan" /> TELEMETRY HUD // PRIMARY
+            </span>
+            <span className={`text-[8px] px-1.5 py-0.5 rounded flex items-center gap-0.5 ${
+              telemetry.status === 'SYS_STABLE' 
+                ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
+                : 'bg-rose-500/10 text-rose-400 border border-rose-500/20 glitch-text'
+            }`}>
+              {telemetry.status === 'SYS_STABLE' ? '● ONLINE' : '▲ WARN'}
+            </span>
+          </div>
+
+          {/* Telemetry readouts */}
+          <div className="grid grid-cols-2 gap-2 mb-3.5">
+            <div className="bg-space-black/55 p-2 border border-white/5 rounded">
+              <div className="text-[8px] text-slate-500 uppercase">VELOCITY</div>
+              <div className="text-sm font-semibold text-slate-100 mt-0.5 tabular-nums">
+                {parseFloat((telemetry.speed / 1225).toFixed(2))} <span className="text-[10px] text-slate-500 font-normal">M</span>
+              </div>
+              <div className="text-[8px] text-neon-cyan/70 mt-0.5 tabular-nums">{(telemetry.speed * 3.6).toFixed(0)} km/h</div>
+            </div>
+            <div className="bg-space-black/55 p-2 border border-white/5 rounded">
+              <div className="text-[8px] text-slate-500 uppercase">ALTITUDE</div>
+              <div className="text-sm font-semibold text-slate-100 mt-0.5 tabular-nums">
+                {telemetry.altitude} <span className="text-[10px] text-slate-500 font-normal">km</span>
+              </div>
+              <div className="text-[8px] text-neon-cyan/70 mt-0.5">APOGEE</div>
+            </div>
+          </div>
+
+          {/* Guidance vectors */}
+          <div className="border border-white/5 bg-space-black/45 rounded p-2 flex flex-col gap-1.5 text-[10px] text-slate-300">
+            <div className="flex justify-between items-center pb-1 border-b border-white/5 text-[9px]">
+              <span className="text-slate-500">GUIDANCE VECTORS</span>
+              <span className="text-slate-400">STAGING STABLE</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span>PITCH</span>
+              <span className="text-neon-cyan font-bold tabular-nums">{telemetry.pitch}°</span>
+            </div>
+            <div className="h-1 bg-space-black rounded-full overflow-hidden">
+              <div className="h-full bg-neon-cyan rounded-full transition-all" style={{ width: `${(telemetry.pitch / 90) * 100}%` }} />
+            </div>
+            <div className="flex justify-between items-center">
+              <span>YAW / ROLL</span>
+              <span className="text-slate-300 tabular-nums">{telemetry.yaw}° / {telemetry.roll}°/s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-dvh flex flex-col justify-center items-center px-6 overflow-hidden starfield select-none pt-16">

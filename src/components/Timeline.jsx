@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Compass, Calendar, Zap, Clock, Orbit, Target, ArrowRight, Link } from 'lucide-react';
 import { UPCOMING_LAUNCHES } from '../data/mockLaunchData';
 
-export default function Timeline({ onSelectLaunch }) {
+export default function Timeline({ onSelectLaunch, isWidget = false }) {
   const [expandedItems, setExpandedItems] = useState({});
   const [rotationAngle, setRotationAngle] = useState(0);
   const [autoRotate, setAutoRotate] = useState(true);
@@ -73,7 +73,7 @@ export default function Timeline({ onSelectLaunch }) {
           newPulseEffect[relId] = true;
         });
         setPulseEffect(newPulseEffect);
-        centerViewOnNode(id);
+        if (!isWidget) centerViewOnNode(id);
       } else {
         setActiveNodeId(null);
         setAutoRotate(true);
@@ -86,7 +86,7 @@ export default function Timeline({ onSelectLaunch }) {
 
   // Auto rotation loop using requestAnimationFrame for butter-smooth animation
   useEffect(() => {
-    if (!autoRotate) return;
+    if (!autoRotate || isWidget) return;
 
     let animationFrameId;
     let lastTime = performance.now();
@@ -158,6 +158,84 @@ export default function Timeline({ onSelectLaunch }) {
         return 'bg-neutral-800 text-slate-400 border border-white/5';
     }
   };
+
+  if (isWidget) {
+    return (
+      <div className="w-full h-full flex flex-col min-h-0 select-none font-mono">
+        <div className="text-[10px] text-slate-500 mb-2 uppercase tracking-widest">
+          MISSION MILESTONE NODES
+        </div>
+        <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-3 min-h-0">
+          {timelineData.map((item) => {
+            const isExpanded = expandedItems[item.id];
+            const Icon = item.icon;
+            
+            return (
+              <div 
+                key={item.id}
+                className={`p-3 border rounded-lg transition-all duration-300 text-left ${
+                  isExpanded 
+                    ? 'bg-neon-cyan/5 border-neon-cyan/30 shadow-[0_0_15px_rgba(255,158,0,0.06)]' 
+                    : 'bg-space-black/40 border-white/5 hover:border-white/10'
+                }`}
+              >
+                <div 
+                  className="flex items-center justify-between cursor-pointer"
+                  onClick={() => toggleItem(item.id)}
+                >
+                  <div className="flex items-center gap-2 max-w-[70%]">
+                    <div className={`p-1.5 rounded ${isExpanded ? 'bg-neon-cyan text-space-black' : 'bg-white/5 text-slate-400'}`}>
+                      <Icon size={12} />
+                    </div>
+                    <span className="text-xs font-bold text-slate-200 truncate">{item.title}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold ${getStatusBadgeStyles(item.status)}`}>
+                      {item.status.replace('-', ' ')}
+                    </span>
+                  </div>
+                </div>
+
+                {isExpanded && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mt-3 border-t border-white/5 pt-2 text-[10px] text-slate-400 overflow-hidden"
+                  >
+                    <p className="font-sans leading-relaxed mb-3">{item.content}</p>
+                    <div className="flex flex-col gap-1 text-[9px] bg-space-black/55 p-2 rounded border border-white/5">
+                      <div className="flex justify-between">
+                        <span>LAUNCH SITE</span>
+                        <span className="text-slate-200">{item.launchSite.split(',')[0]}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>ORBIT DEPOT</span>
+                        <span className="text-slate-200">{item.targetOrbit}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>VEHICLE</span>
+                        <span className="text-neon-cyan">{item.rocketName}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        const originalLaunch = sortedLaunches.find((l) => l.id === item.originalId);
+                        if (originalLaunch) onSelectLaunch(originalLaunch);
+                      }}
+                      className="w-full mt-3 py-1 bg-neon-cyan hover:bg-neon-cyan/90 text-space-black font-extrabold text-[10px] rounded transition-all text-center flex items-center justify-center gap-1 cursor-pointer glow-cyan"
+                    >
+                      <Compass size={10} /> ACCESS FLIGHT DESK
+                    </button>
+                  </motion.div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section 

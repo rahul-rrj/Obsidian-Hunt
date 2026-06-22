@@ -45,7 +45,62 @@ function CardCountdown({ launchDate }) {
   );
 }
 
-export default function UpcomingLaunches({ onSelectLaunch }) {
+export default function UpcomingLaunches({ onSelectLaunch, isWidget = false }) {
+  if (isWidget) {
+    return (
+      <div className="w-full h-full flex flex-col min-h-0 select-none">
+        <div className="text-[10px] text-slate-500 mb-2 font-mono uppercase tracking-widest">
+          FLIGHT SCHEDULE MANIFESTS ({UPCOMING_LAUNCHES.length})
+        </div>
+        <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-4 min-h-0">
+          {UPCOMING_LAUNCHES.map((launch) => (
+            <div
+              key={launch.id}
+              className="bg-cyber-slate/30 border border-white/10 hover:border-neon-cyan/40 backdrop-blur-md rounded-lg overflow-hidden group flex flex-col transition-all duration-300 shadow-md hover:shadow-[0_0_15px_rgba(255,158,0,0.08)] shrink-0"
+            >
+              <div className="h-32 overflow-hidden relative border-b border-white/5">
+                <img 
+                  src={launch.image} 
+                  alt={launch.missionName}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-space-black via-space-black/40 to-transparent" />
+                
+                {/* Site ID Badge */}
+                <span className="absolute top-2 left-2 bg-space-black/75 border border-white/15 px-1.5 py-0.5 rounded text-[8px] text-slate-300 font-mono">
+                  {launch.rocketName}
+                </span>
+
+                {/* Countdown Ticking */}
+                <div className="absolute bottom-2 left-2 bg-space-black/80 backdrop-blur-sm border border-neon-cyan/20 px-2 py-0.5 rounded">
+                  <CardCountdown launchDate={launch.launchDate} />
+                </div>
+              </div>
+
+              {/* Content Body */}
+              <div className="p-3 flex flex-col text-left">
+                <h3 className="text-sm font-bold text-white group-hover:text-neon-cyan transition-colors truncate font-display">
+                  {launch.missionName}
+                </h3>
+                <p className="text-[10px] text-slate-400 font-sans line-clamp-2 mt-1 leading-relaxed">
+                  {launch.description}
+                </p>
+
+                {/* Card Footer Actions */}
+                <button
+                  onClick={() => onSelectLaunch(launch)}
+                  className="w-full mt-3 bg-white/5 hover:bg-neon-cyan hover:text-space-black border border-white/10 hover:border-neon-cyan text-[10px] font-display font-extrabold py-1.5 rounded transition-all flex items-center justify-center gap-1 cursor-pointer"
+                >
+                  <Terminal size={10} /> MISSION DETAILS
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <section id="upcoming" className="py-20 px-6 max-w-7xl mx-auto select-none border-b border-white/5 relative">
       <div className="absolute inset-0 cyber-grid opacity-5 pointer-events-none" />

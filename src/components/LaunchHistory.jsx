@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Filter, CheckCircle2, XCircle, ChevronRight, RefreshCw, Calendar } from 'lucide-react';
 import { HISTORICAL_LAUNCHES } from '../data/mockLaunchData';
 
-export default function LaunchHistory({ onSelectLaunch }) {
+export default function LaunchHistory({ onSelectLaunch, isWidget = false }) {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('ALL'); // ALL, SUCCESS, FAILED
 
@@ -48,6 +48,79 @@ export default function LaunchHistory({ onSelectLaunch }) {
 
     return matchesSearch && matchesFilter;
   });
+
+  if (isWidget) {
+    return (
+      <div className="w-full h-full flex flex-col min-h-0 select-none font-mono">
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-2 mb-3">
+          <div className="relative w-full flex items-center bg-space-black border border-white/10 rounded px-2.5 py-1 focus-within:border-neon-cyan/50 transition-colors">
+            <Search size={12} className="text-slate-500 mr-2 shrink-0" />
+            <input 
+              type="text"
+              placeholder="Search historical logs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-transparent border-none text-[11px] focus:outline-none text-slate-200 placeholder-slate-600"
+            />
+          </div>
+          <div className="flex items-center justify-between text-[9px] text-slate-500">
+            <span>FILTER:</span>
+            <div className="flex gap-1">
+              {['ALL', 'SUCCESS', 'FAILED'].map((type) => (
+                <button
+                  key={type}
+                  onClick={() => setFilter(type)}
+                  className={`px-2 py-0.5 border rounded transition-all cursor-pointer ${
+                    filter === type
+                      ? 'bg-neon-cyan/15 text-neon-cyan border-neon-cyan/30'
+                      : 'bg-space-black/50 text-slate-400 border-white/10 hover:border-white/20'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Vertical scroll list of logs */}
+        <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-2 min-h-0 border border-white/5 rounded bg-cyber-slate/10 p-2">
+          {filteredLaunches.map((launch) => (
+            <div
+              key={launch.id}
+              onClick={() => handleHistoryClick(launch)}
+              className="p-2 border border-white/5 rounded bg-space-black/40 hover:bg-neon-cyan/5 hover:border-neon-cyan/20 transition-all cursor-pointer flex items-center justify-between group"
+            >
+              <div className="text-left max-w-[70%]">
+                <div className="text-[11px] font-bold text-slate-200 group-hover:text-neon-cyan truncate">
+                  {launch.missionName}
+                </div>
+                <div className="text-[9px] text-slate-500 truncate mt-0.5">
+                  {launch.rocketName} • {new Date(launch.launchDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`px-1.5 py-0.5 rounded text-[8px] border uppercase ${
+                  launch.status === 'SUCCESS'
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                    : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                }`}>
+                  {launch.status}
+                </span>
+                <ChevronRight size={12} className="text-slate-600 group-hover:text-neon-cyan group-hover:translate-x-0.5 transition-all" />
+              </div>
+            </div>
+          ))}
+          {filteredLaunches.length === 0 && (
+            <div className="text-center text-[10px] text-slate-500 py-6">
+              NO RECORDS LOGGED IN COORD
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section id="history" className="py-20 px-6 max-w-7xl mx-auto select-none border-b border-white/5 relative font-mono">
