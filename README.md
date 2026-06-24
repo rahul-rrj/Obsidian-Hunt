@@ -208,3 +208,4 @@ This application is configured for continuous integration/continuous deployment 
 <p align="center">
   Developed with 🛰️ by the Obsidian Hunt Crew
 </p>
+<!-- badge trigger -->
